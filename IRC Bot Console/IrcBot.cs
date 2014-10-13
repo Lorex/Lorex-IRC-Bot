@@ -141,12 +141,21 @@ namespace IRC_Bot_Console
                     }
                     else
                     {
-                        int r1=0,r2=0;
-                        r1 = Convert.ToInt32(cmd[1]);
-                        r2 = Convert.ToInt32(cmd[2]);
-                        int buff1 = Math.Min(r1, r2), buff2 = Math.Max(r1, r2);
-
-                        cmdClass.rand(buff1,buff2);
+                        try
+                        {
+                            int r1 = 0, r2 = 0;
+                            r1 = Convert.ToInt32(cmd[1]);
+                            r2 = Convert.ToInt32(cmd[2]);
+                            int buff1 = Math.Min(r1, r2), buff2 = Math.Max(r1, r2);
+                            cmdClass.rand(buff1, buff2);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[ERROR] -> " + ex.ToString());
+                            writer.WriteLine("PRIVMSG " + CHANNEL + " :\u0002\u000304錯誤：無效的參數");
+                            writer.Flush();
+                            break;
+                        }
                     }
                     break;
                 default:
