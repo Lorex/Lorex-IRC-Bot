@@ -45,7 +45,7 @@ namespace IRC_Bot_Console
                 writer.Flush();
                 writer.WriteLine("PRIVMSG " + CHANNEL + " :Bot 連線成功。");
                 writer.Flush();
-
+                Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " +"[MESSAGE] -> Server on.");
                 while(true)
                 {
                     while((input=reader.ReadLine())!=null)
@@ -55,8 +55,6 @@ namespace IRC_Bot_Console
                         {
                             string PongReply = splitInput[1];
                             writer.WriteLine("PONG " + PongReply);
-                            writer.Flush();
-                            writer.WriteLine("PRIVMSG "+CHANNEL+" 我又來回應Server的Ping啦! XD");
                             writer.Flush();
                             continue;
                         }
@@ -79,19 +77,19 @@ namespace IRC_Bot_Console
                                 {
                                     if (SayTarget == NICK)
                                     {
-                                        Console.WriteLine("[MGR COMMAND] -> " + SayNick + " : " + SayWord);
+                                        Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[MGR COMMAND] -> " + SayNick + " : " + SayWord);
                                         PMCommand(SayNick, SayWord.TrimStart('@'));
 
                                     }
                                     else
                                     {
-                                        Console.WriteLine("[COMMAND] -> " + SayNick + " : " + SayWord);
+                                        Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[COMMAND] -> " + SayNick + " : " + SayWord);
                                         ParseCommand(SayNick, SayWord.TrimStart('@'));
 
                                     }
                                 }
                                 else
-                                    Console.WriteLine("[CHAT] -> " + SayNick + " : " + SayWord);
+                                    Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[CHAT] -> " + SayNick + " : " + SayWord);
                                 break;
                             default:
                                 break;
