@@ -152,7 +152,7 @@ namespace IRC_Bot_Console
                         catch (Exception ex)
                         {
                             Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[ERROR] -> " + ex.ToString());
-                            writer.WriteLine("PRIVMSG " + CHANNEL + " :\u0002\u000304錯誤：無效的參數");
+                            writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000304錯誤：無效的參數");
                             writer.Flush();
                             break;
                         }
