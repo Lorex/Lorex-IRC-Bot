@@ -138,7 +138,7 @@ namespace IRC_Bot_Console
                     if (cmd.Length < 3)
                     {
                         IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000304錯誤：參數不足，語法 @rand <最小值> <最大值>");
-                        IrcBot.writer.Flush();
+                        IrcBot.writer.Flush(); 
                         break;
                     }
                     else

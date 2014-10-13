@@ -12,7 +12,7 @@ namespace IRC_Bot_Console
         static string PING = "PING :";
         private Thread pingSender;
         
-        //建構子
+        //建構子 
         public Ping()
         {
             pingSender = new Thread (new ThreadStart(this.Run));

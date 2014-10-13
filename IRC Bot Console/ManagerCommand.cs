@@ -16,7 +16,7 @@ namespace IRC_Bot_Console
             {
                 IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000304警告：正在結束 Bot");
                 IrcBot.writer.Flush();
-                IrcBot.writer.Close();
+                IrcBot.writer.Close(); 
                 Environment.Exit(0);
             }
             else

@@ -28,7 +28,7 @@ namespace IRC_Bot_Console
             IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000302現在時間 " + DateTime.Now);
             IrcBot.writer.Flush();
         }
-        public void help()
+        public void help() 
         {
             IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000302指令列表 ");
             IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000302==================== ");
