@@ -8,19 +8,25 @@ namespace IRC_Bot_Console
 {
     class config
     {
-        public static string SERVER = "irc.freenode.net";
-        public static int PORT = 6667;
-        public static string USER = "Lorex_Bot Lorex_Bot Lorex_Bot :Lorex_IRC";
-        public static string NICK = "Lorex_Bot";
+        public const string SERVER = "irc.freenode.net";
+        public const int PORT = 6667;
+        public const string USER = "Lorex_Bot Lorex_Bot Lorex_Bot :Lorex_IRC";
+        public const string NICK = "Lorex_Bot";
 
-        public static string CHANNEL = "#ysitd";//"#oktw";
+        public const string CHANNEL = "#ysitd";//"#oktw";
+    }
+    public enum consoleType
+    {
+        Message,
+        Error,
+        Command,
+        ManagerCommand,
+        Chat
     }
     public enum msgType
     {
-        MESSAGE,
-        ERROR,
-        COMMAND,
-        MGRCOMMAND,
-        CHAT
+        Notify,
+        Information,
+        Error
     }
 }

@@ -12,8 +12,7 @@ namespace IRC_Bot_Console
         {
             CmdModule cmdClass = new CmdModule();
             string[] cmd = Command.Split(new Char[] { ' ' });
-            IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000314來自 " + Nick + " 的命令已解析。");
-            IrcBot.writer.Flush();
+            Function.SendServerMessage(msgType.Notify, "來自 " + Nick + " 的命令已解析。");
 
             switch (cmd[0])
             {
@@ -35,8 +34,7 @@ namespace IRC_Bot_Console
                 case "rand":
                     if (cmd.Length < 3)
                     {
-                        IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000304錯誤：參數不足，語法 @rand <最小值> <最大值>");
-                        IrcBot.writer.Flush();
+                        Function.SendServerMessage(msgType.Error,"參數不足，語法 @rand <最小值> <最大值>");
                         break;
                     }
                     else
@@ -51,65 +49,60 @@ namespace IRC_Bot_Console
                         }
                         catch (Exception ex)
                         {
-                            Log(msgType.ERROR, ex.ToString());
-                            IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000304錯誤：無效的參數");
-                            IrcBot.writer.Flush();
+                            Log(consoleType.Error, ex.ToString());
+                            Function.SendServerMessage(msgType.Error,"無效的參數");
                             break;
                         }
                     }
                     break;
                 default:
-                    IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u0002\u000304錯誤：命令無法解析");
-                    IrcBot.writer.Flush();
+                    Function.SendServerMessage( msgType.Error,"命令無法解析");
                     break;
             }
         }
-        public static void PMCommand(string Nick, string Command)
+        public static void PMCommand(string nick, string command)
         {
             MngCmdModule mgcmdClass = new MngCmdModule();
-            string[] cmd = Command.Split(new Char[] { ' ' });
-            IrcBot.writer.WriteLine("PRIVMSG " + Nick + " :\u000314來自 " + Nick + " 的管理者命令已解析。");
-            IrcBot.writer.Flush();
+            string[] cmd = command.Split(new Char[] { ' ' });
+            Function.SendServerMessage(msgType.Notify,"來自 " + nick + " 的管理者命令已解析。",nick);
 
             switch (cmd[0])
             {
                 case "exit":
                     if (cmd.Length < 2)
                     {
-                        IrcBot.writer.WriteLine("PRIVMSG " + Nick + " :\u000304錯誤：請輸入密碼");
-                        IrcBot.writer.Flush();
+                        Function.SendServerMessage(msgType.Error,"請輸入密碼",nick);
                         break;
                     }
                     else
                     {
-                        mgcmdClass.exit(Nick, cmd[1]);
+                        mgcmdClass.exit(nick, cmd[1]);
                     }
                     break;
                 default:
-                    IrcBot.writer.WriteLine("PRIVMSG " + Nick + " :\u0002\u000304錯誤：命令無法解析");
-                    IrcBot.writer.Flush();
+                    Function.SendServerMessage(msgType.Error,"錯誤：命令無法解析",nick);
                     break;
             }
         }
-        public static void Log(msgType type, string msg)
+        public static void Log(consoleType type, string msg)
         {
 
             msg = msg.Insert(0, " -> ");
             switch (type)
             {
-                case msgType.COMMAND:
+                case consoleType.Command:
                     msg = msg.Insert(0, "[COMMAND]");
                     break;
-                case msgType.ERROR:
+                case consoleType.Error:
                     msg = msg.Insert(0, "[ERROR]");
                     break;
-                case msgType.MESSAGE:
+                case consoleType.Message:
                     msg = msg.Insert(0, "[MESSAGE]");
                     break;
-                case msgType.MGRCOMMAND:
+                case consoleType.ManagerCommand:
                     msg = msg.Insert(0, "[MGRCOMMAND]");
                     break;
-                case msgType.CHAT:
+                case consoleType.Chat:
                     msg = msg.Insert(0, "[CHAT]");
                     break;
             }
@@ -117,6 +110,22 @@ namespace IRC_Bot_Console
 
             Console.WriteLine(msg);
 
+        }
+        public static void SendServerMessage(msgType type, string msg, string nick = config.CHANNEL)
+        {
+            switch (type){
+                case msgType.Notify:
+                    IrcBot.writer.WriteLine("PRIVMSG " + nick + " :\u000314" + msg);
+                    break;
+                case msgType.Error:
+                    IrcBot.writer.WriteLine("PRIVMSG " + nick + " :\u000304錯誤：" + msg);
+                    break;
+                case msgType.Information:
+                    IrcBot.writer.WriteLine("PRIVMSG " + nick + " :\u000302" + msg);
+                    break;
+                
+            }
+            IrcBot.writer.Flush();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace IRC_Bot_Console
             switch(chat)
             {
                 case "XD":
+                    Function.SendServerMessage(msgType.Information, "什麼事情這麼好笑XD");
                     break;
             }
         }

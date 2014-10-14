@@ -37,10 +37,9 @@ namespace IRC_Bot_Console
                 writer.Flush();
                 writer.WriteLine("JOIN " + config.CHANNEL);
                 writer.Flush();
-                writer.WriteLine("PRIVMSG " + config.CHANNEL + " :Bot 連線成功。");
-                writer.Flush();
 
-                Function.Log(msgType.MESSAGE,"Server on.");
+                Function.SendServerMessage(msgType.Notify, "Bot 連線成功");
+                Function.Log(consoleType.Message,"Server on.");
                 while(true)
                 {
                     while((input=reader.ReadLine())!=null)
@@ -72,20 +71,20 @@ namespace IRC_Bot_Console
                                 {
                                     if (SayTarget == config.NICK)
                                     {
-                                        Function.Log(msgType.MGRCOMMAND, SayNick + " : " + SayWord);
+                                        Function.Log(consoleType.ManagerCommand, SayNick + " : " + SayWord);
                                         Function.PMCommand(SayNick, SayWord.TrimStart('@'));
                                         break;
                                     }
                                     else
                                     {
-                                        Function.Log(msgType.COMMAND, SayNick + " : " + SayWord);
+                                        Function.Log(consoleType.Command, SayNick + " : " + SayWord);
                                         Function.ParseCommand(SayNick, SayWord.TrimStart('@'));
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    Function.Log(msgType.CHAT, SayNick + " : " + SayWord);
+                                    Function.Log(consoleType.Chat, SayNick + " : " + SayWord);
                                     ChatModule.parseChat(SayNick, SayWord);
                                     break;
                                 }
@@ -100,7 +99,7 @@ namespace IRC_Bot_Console
             }
             catch (Exception ex)
             {
-                Function.Log(msgType.ERROR, ex.ToString());
+                Function.Log(consoleType.Error, ex.ToString());
                 Thread.Sleep(5000);
                 string[] argv = { };
                 Main(argv);
