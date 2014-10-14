@@ -41,13 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatModule.cs" />
+    <Compile Include="Modules\ChatModule.cs" />
     <Compile Include="config.cs" />
-    <Compile Include="MngCmdModule.cs" />
-    <Compile Include="Ping.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="Modules\MngCmdModule.cs" />
+    <Compile Include="Modules\Ping.cs" />
     <Compile Include="IrcBot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CmdModule.cs" />
+    <Compile Include="Modules\CmdModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

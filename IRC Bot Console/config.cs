@@ -15,4 +15,12 @@ namespace IRC_Bot_Console
 
         public static string CHANNEL = "#ysitd";//"#oktw";
     }
+    public enum msgType
+    {
+        MESSAGE,
+        ERROR,
+        COMMAND,
+        MGRCOMMAND,
+        CHAT
+    }
 }
