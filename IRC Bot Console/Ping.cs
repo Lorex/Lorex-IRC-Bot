@@ -25,7 +25,7 @@ namespace IRC_Bot_Console
         {
             while (true)
             {
-                IrcBot.writer.WriteLine(PING + IrcBot.SERVER);
+                IrcBot.writer.WriteLine(PING + config.SERVER);
                 IrcBot.writer.Flush();
                 Thread.Sleep(15000);
             }

@@ -12,15 +12,15 @@ namespace IRC_Bot_Console
 {
     class IrcBot
     {
-        public static string SERVER = "irc.freenode.net";
-        private static int PORT = 6667;
-        private static string USER = "Lorex_Bot Lorex_Bot Lorex_Bot :Lorex_IRC";
-        private static string NICK = "Lorex_Bot";
-
-        public static string CHANNEL = "#ysitd";//"#oktw";
         public static StreamWriter writer;
-
         public static DateTime START_TIME = DateTime.Now; //count system uptime
+        public  enum  msgType {
+            MESSAGE,
+            ERROR,
+            COMMAND,
+            MGRCOMMAND,
+            CHAT
+        }
         static void Main(string[] args)
         {
             NetworkStream stream;
@@ -29,7 +29,7 @@ namespace IRC_Bot_Console
             StreamReader reader;
 
             try{
-                irc = new TcpClient (SERVER,PORT);
+                irc = new TcpClient(config.SERVER, config.PORT);
                 stream = irc.GetStream();
                 reader = new StreamReader(stream);
                 writer = new StreamWriter(stream);
@@ -37,15 +37,16 @@ namespace IRC_Bot_Console
                 // Start Ping Sender Thread
                 Ping ping = new Ping();
                 ping.Start();
-                writer.WriteLine("NICK " + NICK);
+                writer.WriteLine("NICK " + config.NICK);
                 writer.Flush();
-                writer.WriteLine("USER "+ USER);
+                writer.WriteLine("USER " + config.USER);
                 writer.Flush();
-                writer.WriteLine("JOIN " + CHANNEL);
+                writer.WriteLine("JOIN " + config.CHANNEL);
                 writer.Flush();
-                writer.WriteLine("PRIVMSG " + CHANNEL + " :Bot 連線成功。");
+                writer.WriteLine("PRIVMSG " + config.CHANNEL + " :Bot 連線成功。");
                 writer.Flush();
-                Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " +"[MESSAGE] -> Server on.");
+
+                Log(msgType.MESSAGE,"Server on.");
                 while(true)
                 {
                     while((input=reader.ReadLine())!=null)
@@ -75,21 +76,21 @@ namespace IRC_Bot_Console
 
                                 if (SayWord.StartsWith("@"))
                                 {
-                                    if (SayTarget == NICK)
+                                    if (SayTarget == config.NICK)
                                     {
-                                        Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[MGR COMMAND] -> " + SayNick + " : " + SayWord);
+                                        Log(msgType.MGRCOMMAND, SayNick + " : " + SayWord);
                                         PMCommand(SayNick, SayWord.TrimStart('@'));
 
                                     }
                                     else
                                     {
-                                        Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[COMMAND] -> " + SayNick + " : " + SayWord);
+                                        Log(msgType.COMMAND, SayNick + " : " + SayWord);
                                         ParseCommand(SayNick, SayWord.TrimStart('@'));
 
                                     }
                                 }
                                 else
-                                    Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[CHAT] -> " + SayNick + " : " + SayWord);
+                                    Log(msgType.CHAT, SayNick + " : " + SayWord);
                                 break;
                             default:
                                 break;
@@ -100,9 +101,9 @@ namespace IRC_Bot_Console
                     irc.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
+                Log(msgType.ERROR, ex.ToString());
                 Thread.Sleep(5000);
                 string[] argv = { };
                 Main(argv);
@@ -110,9 +111,9 @@ namespace IRC_Bot_Console
         }
         static void ParseCommand(string Nick, string Command)
         {
-            Command cmdClass = new Command();
+            CmdModule cmdClass = new CmdModule();
             string[] cmd = Command.Split(new Char[] { ' ' });
-            writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000314來自 " + Nick + " 的命令已解析。");
+            writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000314來自 " + Nick + " 的命令已解析。");
             writer.Flush();
             
             switch (cmd[0])
@@ -135,7 +136,7 @@ namespace IRC_Bot_Console
                 case "rand":
                     if (cmd.Length < 3)
                     {
-                        IrcBot.writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000304錯誤：參數不足，語法 @rand <最小值> <最大值>");
+                        IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000304錯誤：參數不足，語法 @rand <最小值> <最大值>");
                         IrcBot.writer.Flush(); 
                         break;
                     }
@@ -151,22 +152,22 @@ namespace IRC_Bot_Console
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] " + "[ERROR] -> " + ex.ToString());
-                            writer.WriteLine("PRIVMSG " + CHANNEL + " :\u000304錯誤：無效的參數");
+                            Log(msgType.ERROR,ex.ToString());
+                            writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u000304錯誤：無效的參數");
                             writer.Flush();
                             break;
                         }
                     }
                     break;
                 default:
-                    writer.WriteLine("PRIVMSG " + CHANNEL + " :\u0002\u000304錯誤：命令無法解析");
+                    writer.WriteLine("PRIVMSG " + config.CHANNEL + " :\u0002\u000304錯誤：命令無法解析");
                     writer.Flush();
                     break;
             }
         }
         static void PMCommand(string Nick, string Command)
         {
-            ManagerCommand mgcmdClass = new ManagerCommand();
+            MngCmdModule mgcmdClass = new MngCmdModule();
             string[] cmd = Command.Split(new Char[] { ' ' });
             writer.WriteLine("PRIVMSG " + Nick + " :\u000314來自 " + Nick + " 的管理者命令已解析。");
             writer.Flush();
@@ -189,6 +190,30 @@ namespace IRC_Bot_Console
                     writer.Flush();
                     break;
             }
+        }
+        public static void Log(msgType type, string msg)
+        {
+
+            msg = msg.Insert(0, " -> ");
+            switch(type)
+            {
+                case msgType.COMMAND:
+                    msg = msg.Insert(0, "[COMMAND]");
+                    break;
+                case msgType.ERROR:
+                    msg = msg.Insert(0, "[ERROR]");
+                    break;
+                case msgType.MESSAGE:
+                    msg = msg.Insert(0, "[MESSAGE]");
+                    break;
+                case msgType.MGRCOMMAND:
+                    msg = msg.Insert(0, "[MGRCOMMAND]");
+                    break;
+            }
+            msg = msg.Insert(0, "[" + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss") + "] ");
+
+            Console.WriteLine(msg);
+            
         }
     }
 }
