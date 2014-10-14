@@ -14,15 +14,17 @@ namespace IRC_Bot_Console
     {
         public static StreamWriter writer;
         public static DateTime START_TIME = DateTime.Now; //count system uptime
-       
+        public static bool connection = true;
+
         static void Main(string[] args)
         {
             NetworkStream stream;
             TcpClient irc;
             string input;
-            StreamReader reader;
+            StreamReader reader;;
 
-            try{
+            try
+            {
                 irc = new TcpClient(config.SERVER, config.PORT);
                 stream = irc.GetStream();
                 reader = new StreamReader(stream);
@@ -39,12 +41,13 @@ namespace IRC_Bot_Console
                 writer.Flush();
 
                 Function.SendServerMessage(msgType.Notify, "Bot 連線成功");
-                Function.Log(consoleType.Message,"Server on.");
-                while(true)
+                Function.Log(consoleType.Message, "Server on.");
+                connection = true;
+                while (connection == true)
                 {
-                    while((input=reader.ReadLine())!=null)
+                    while (connection && ((input = reader.ReadLine()) != null))
                     {
-                        string[] splitInput = input.Split(new Char[] {' '});
+                        string[] splitInput = input.Split(new Char[] { ' ' });
                         if (splitInput[0] == "PING")
                         {
                             string PongReply = splitInput[1];
@@ -55,16 +58,16 @@ namespace IRC_Bot_Console
 
                         switch (splitInput[1])
                         {
-                         
+
                             case "PRIVMSG":
-                                string[] splitHeader = (splitInput[0].Split(new char[] {'!'}));
-                                string[] splitMsg = input.Split(new char[] {':'});
+                                string[] splitHeader = (splitInput[0].Split(new char[] { '!' }));
+                                string[] splitMsg = input.Split(new char[] { ':' });
                                 string SayNick = splitHeader[0].TrimStart(':');
                                 string SayWord = splitInput[3].TrimStart(':');
                                 string SayTarget = splitInput[2];
 
-                                for (int i = 4; i < splitInput.Length;i++ )
-                                    SayWord = SayWord + " " +splitInput[i];
+                                for (int i = 4; i < splitInput.Length; i++)
+                                    SayWord = SayWord + " " + splitInput[i];
 
 
                                 if (SayWord.StartsWith("@"))
@@ -92,9 +95,11 @@ namespace IRC_Bot_Console
                                 break;
                         }
                     }
-                    writer.Close();
-                    reader.Close();
-                    irc.Close();
+                    connection = false;
+                    stream.Close();
+                    irc.Client.Close();
+                    Function.Log(consoleType.Message, "Disconnected.");
+                    Console.Read();
                 }
             }
             catch (Exception ex)
@@ -105,6 +110,5 @@ namespace IRC_Bot_Console
                 Main(argv);
             }
         }
-
     }
 }

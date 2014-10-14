@@ -13,8 +13,12 @@ namespace IRC_Bot_Console
             if ((Nick == "Lorex") && (password == "exit"))
             {
                 Function.SendServerMessage(msgType.Information, "\u000304警告：正在結束 Bot （管理者： " + Nick + "）");
-                IrcBot.writer.Close();
-                Environment.Exit(0);
+
+                IrcBot.writer.WriteLine("PART " + config.CHANNEL);
+                IrcBot.writer.Flush();
+                IrcBot.writer.WriteLine("QUIT");
+                IrcBot.writer.Flush();
+                IrcBot.connection = false;
             }
             else
             {

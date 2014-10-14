@@ -23,10 +23,20 @@ namespace IRC_Bot_Console
         }
         public void Run()
         {
+            pingSender.IsBackground = true;
+            pingSender.Name = "PingSender";
             while (true)
             {
-                IrcBot.writer.WriteLine(PING + config.SERVER);
-                Thread.Sleep(15000);
+                if (IrcBot.connection == true)
+                {
+                    IrcBot.writer.WriteLine(PING + config.SERVER);
+                    Thread.Sleep(15000);
+                }
+                else
+                {
+                    pingSender.Abort();
+                    
+                }
             }
         }
     }
