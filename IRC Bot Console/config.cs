@@ -13,7 +13,7 @@ namespace IRC_Bot_Console
         public const string USER = "Lorex_Bot Lorex_Bot Lorex_Bot :Lorex_IRC";
         public const string NICK = "Lorex_Bot";
 
-        public const string CHANNEL = "#oktw";
+        public const string CHANNEL = "#ysitd";
     }
     public enum consoleType
     {
