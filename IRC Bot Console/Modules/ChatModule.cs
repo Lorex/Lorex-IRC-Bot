@@ -15,6 +15,9 @@ namespace IRC_Bot_Console
                 case "XD":
                     Function.SendServerMessage(msgType.Information, "什麼事情這麼好笑XD");
                     break;
+                case "w":
+                    Function.SendServerMessage(msgType.Information, "wwwwwwwwwwwwwwwwwwwww");
+                    break;
             }
         }
     }

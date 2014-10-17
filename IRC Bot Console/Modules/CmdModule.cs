@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace IRC_Bot_Console
 {
     class CmdModule
     {
-        string CHANNEL = config.CHANNEL;
         public void say(string Nick, string[] cmd)
         {
             if (cmd.Length < 2)
@@ -35,6 +35,8 @@ namespace IRC_Bot_Console
             Function.SendServerMessage(msgType.Information,"@say - 說話");
             Function.SendServerMessage(msgType.Information,"@me - 在對話前加入自己的名字");
             Function.SendServerMessage(msgType.Information,"@uptime - 顯示 Bot 上線時間");
+            Function.SendServerMessage(msgType.Information, "@version - 顯示 Bot 版本資訊");
+            
         }
         public void me(string Nick, string[] cmd)
         {
@@ -59,6 +61,11 @@ namespace IRC_Bot_Console
         {
             Random Counter = new Random(Guid.NewGuid().GetHashCode());
             Function.SendServerMessage(msgType.Information,"亂數： " + Counter.Next(r1, r2));
+        }
+        public  void version()
+        {
+            Function.SendServerMessage(msgType.Information, "Lorex IRC Bot v." + Assembly.GetEntryAssembly().GetName().Version.ToString());
+
         }
     }
 }
