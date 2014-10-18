@@ -55,10 +55,8 @@ namespace IRC_Bot_Console
                             writer.Flush();
                             continue;
                         }
-
                         switch (splitInput[1])
                         {
-
                             case "PRIVMSG":
                                 string[] splitHeader = (splitInput[0].Split(new char[] { '!' }));
                                 string[] splitMsg = input.Split(new char[] { ':' });
@@ -67,7 +65,7 @@ namespace IRC_Bot_Console
                                 string SayTarget = splitInput[2];
 
                                 for (int i = 4; i < splitInput.Length; i++)
-                                    SayWord = SayWord + " " + splitInput[i];
+                                    SayWord = SayWord + " " + splitInput[i]; 
 
 
                                 if (SayWord.StartsWith("@"))

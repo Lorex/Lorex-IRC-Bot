@@ -12,55 +12,77 @@ namespace IRC_Bot_Console
         {
             CmdModule cmdClass = new CmdModule();
             string[] cmd = Command.Split(new Char[] { ' ' });
-            Function.SendServerMessage(msgType.Notify, "來自 " + Nick + " 的命令已解析。");
-
-            switch (cmd[0])
+            if (!config.shut_up)
             {
-                case "help":
-                    cmdClass.help();
-                    break;
-                case "time":
-                    cmdClass.time();
-                    break;
-                case "say":
-                    cmdClass.say(Nick, cmd);
-                    break;
-                case "me":
-                    cmdClass.me(Nick, cmd);
-                    break;
-                case "uptime":
-                    cmdClass.uptime();
-                    break;
-                case "rand":
-                    if (cmd.Length < 3)
-                    {
-                        Function.SendServerMessage(msgType.Error,"參數不足，語法 @rand <最小值> <最大值>");
+                //Function.SendServerMessage(msgType.Notify, "來自 " + Nick + " 的命令已解析。");
+
+                switch (cmd[0])
+                {
+                    case "help":
+                        cmdClass.help();
                         break;
-                    }
-                    else
-                    {
-                        try
+                    case "time":
+                        cmdClass.time();
+                        break;
+                    case "say":
+                        cmdClass.say(Nick, cmd);
+                        break;
+                    case "me":
+                        cmdClass.me(Nick, cmd);
+                        break;
+                    case "uptime":
+                        cmdClass.uptime();
+                        break;
+                    case "rand":
+                        if (cmd.Length < 3)
                         {
-                            int r1 = 0, r2 = 0;
-                            r1 = Convert.ToInt32(cmd[1]);
-                            r2 = Convert.ToInt32(cmd[2]);
-                            int buff1 = Math.Min(r1, r2), buff2 = Math.Max(r1, r2);
-                            cmdClass.rand(buff1, buff2);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log(consoleType.Error, ex.ToString());
-                            Function.SendServerMessage(msgType.Error,"無效的參數");
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @rand <最小值> <最大值>");
                             break;
                         }
-                    }
-                    break;
-                case "version":
-                    cmdClass.version();
-                    break;
-                default:
-                    Function.SendServerMessage( msgType.Error,"命令無法解析");
-                    break;
+                        else
+                        {
+                            try
+                            {
+                                int r1 = 0, r2 = 0;
+                                r1 = Convert.ToInt32(cmd[1]);
+                                r2 = Convert.ToInt32(cmd[2]);
+                                int buff1 = Math.Min(r1, r2), buff2 = Math.Max(r1, r2);
+                                cmdClass.rand(buff1, buff2);
+                            }
+                            catch (Exception ex)
+                            {
+                                Log(consoleType.Error, ex.ToString());
+                                Function.SendServerMessage(msgType.Error, "無效的參數");
+                                break;
+                            }
+                        }
+                        break;
+                    case "version":
+                        cmdClass.version();
+                        break;
+                    case "g":
+                        if (cmd.Length < 2)
+                        {
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @g <keyword>");
+                            break;
+                        }
+                        else
+                        {
+                            cmdClass.g(cmd[1]);
+                            break;
+                        }
+                    case "shutup":
+                        cmdClass.shutup();
+                        break;
+                    default:
+                        Function.SendServerMessage(msgType.Error, "命令無法解析");
+                        break;
+                }
+            }
+            else if (cmd[0] == "shutup")
+            {
+                Function.SendServerMessage(msgType.Information, "YA!!! 又可以說話惹 wwwwwwwwww");
+                config.shut_up = false;
             }
         }
         public static void PMCommand(string nick, string command)

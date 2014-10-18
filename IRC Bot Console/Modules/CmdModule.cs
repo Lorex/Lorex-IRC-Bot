@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Threading;
 
 namespace IRC_Bot_Console
 {
@@ -36,6 +37,9 @@ namespace IRC_Bot_Console
             Function.SendServerMessage(msgType.Information,"@me - 在對話前加入自己的名字");
             Function.SendServerMessage(msgType.Information,"@uptime - 顯示 Bot 上線時間");
             Function.SendServerMessage(msgType.Information, "@version - 顯示 Bot 版本資訊");
+            Function.SendServerMessage(msgType.Information, "@rand - 產生亂數");
+            Function.SendServerMessage(msgType.Information, "@g - 快速搜尋");
+            Function.SendServerMessage(msgType.Information, "@shutup - 覺得 Bot 太吵的時候可以叫他閉嘴XD");
             
         }
         public void me(string Nick, string[] cmd)
@@ -66,6 +70,28 @@ namespace IRC_Bot_Console
         {
             Function.SendServerMessage(msgType.Information, "Lorex IRC Bot v." + Assembly.GetEntryAssembly().GetName().Version.ToString());
 
+        }
+        public void g(string keyword)
+        {
+            if (keyword == "Lorex")
+            {
+                Function.SendServerMessage(msgType.Information, "就帥哥一個R，哪裡還需要 Google...ˊ_>ˋ");
+            }
+            else
+            {
+                //Function.SendServerMessage(msgType.Information, "https://www.google.com.tw/#q=" + keyword);
+                Function.SendServerMessage(msgType.Information, "這麼簡單的事情直接叫 oktw 來做就好了，叫我幹嘛？ˊ_>ˋ");
+                IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :.g " + keyword);
+                IrcBot.writer.Flush();
+                Thread.Sleep(1000);
+                Function.SendServerMessage(msgType.Information, "恩，好乖 <(￣︶￣)> ");
+
+            }
+        }
+        public void shutup()
+        {
+            Function.SendServerMessage(msgType.Information, "好啦好啦好啦我閉嘴就是w");
+            config.shut_up = true;
         }
     }
 }

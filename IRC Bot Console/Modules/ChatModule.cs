@@ -10,14 +10,17 @@ namespace IRC_Bot_Console
     {
         public static void parseChat(string nick, string chat)
         {
-            switch(chat)
+            if (!config.shut_up)
             {
-                case "XD":
-                    Function.SendServerMessage(msgType.Information, "什麼事情這麼好笑XD");
-                    break;
-                case "w":
-                    Function.SendServerMessage(msgType.Information, "wwwwwwwwwwwwwwwwwwwww");
-                    break;
+                switch (chat)
+                {
+                    case "XD":
+                        Function.SendServerMessage(msgType.Information, "什麼事情這麼好笑XD");
+                        break;
+                    case "w":
+                        Function.SendServerMessage(msgType.Information, "wwwwwwwwwwwwwwwwwwwww");
+                        break;
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ namespace IRC_Bot_Console
         public const string NICK = "Lorex_Bot";
 
         public const string CHANNEL = "#ysitd";
+        public static bool shut_up = false; 
     }
     public enum consoleType
     {
