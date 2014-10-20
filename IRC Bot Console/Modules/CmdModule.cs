@@ -41,7 +41,7 @@ namespace IRC_Bot_Console
             Function.SendServerMessage(msgType.Information, "@rand - 產生亂數");
             Function.SendServerMessage(msgType.Information, "@g - 快速搜尋");
             Function.SendServerMessage(msgType.Information, "@shutup - 覺得 Bot 太吵的時候可以叫他閉嘴XD");
-            
+            Function.SendServerMessage(msgType.Information, "@rules - 管理對話應答規則");
         }
         public void me(string Nick, string[] cmd)
         {
