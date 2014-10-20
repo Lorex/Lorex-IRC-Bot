@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Threading;
+using System.Xml;
 
 namespace IRC_Bot_Console
 {
@@ -92,6 +93,122 @@ namespace IRC_Bot_Console
         {
             Function.SendServerMessage(msgType.Information, "好啦好啦好啦我閉嘴就是w");
             config.shut_up = true;
+        }
+
+        public class rules
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNodeList xmlNodeList;
+            XmlNode node;
+
+            public rules()
+            {
+                xmlDoc.Load("Modules/ChatRules.xml");
+                xmlNodeList = xmlDoc.SelectNodes("rules/chat");
+                node = xmlDoc.SelectSingleNode("rules");
+            }
+
+            private void list()
+            {
+                int i = 0;
+                foreach (XmlNode node in xmlNodeList)
+                {
+                    Function.SendServerMessage(msgType.Information, "RULES[" + i + "]: " + node.Attributes["regex"].Value.ToString() + " => " +  node.Attributes["respond"].Value.ToString());
+                    i++;
+                }
+            }
+            private void add(string regex, string respond)
+            {
+                XmlElement main = xmlDoc.CreateElement("chat");
+                main.SetAttribute("regex", regex);
+                main.SetAttribute("respond", respond);
+                node.AppendChild(main);
+                xmlDoc.Save("Modules/ChatRules.xml");
+                Function.SendServerMessage(msgType.Information, "對話規則新增： " + regex + "=>" + respond);
+            }
+            private void delete(string regex)
+            {
+                bool nodeFound = false;
+                foreach (XmlNode childnode in xmlNodeList)
+                {
+                    if (childnode.Attributes["regex"].Value.ToString() == regex)
+                    {
+                        node.RemoveChild(childnode);
+                        xmlDoc.Save("Modules/ChatRules.xml");
+                        nodeFound = true;
+                        
+                    }
+                }
+                if (nodeFound)
+                    Function.SendServerMessage(msgType.Information, "已刪除對話規則： " + regex);
+                else
+                    Function.SendServerMessage(msgType.Error, "找不到對話規則： " + regex);
+
+            }
+            private void modify(string regex, string respond)
+            {
+                bool nodeFound = false;
+                foreach (XmlNode childnode in xmlNodeList)
+                {
+                    if (childnode.Attributes["regex"].Value.ToString() == regex)
+                    {
+                        XmlElement element = (XmlElement)childnode;
+                        element.SetAttribute("respond", respond);   
+                        xmlDoc.Save("Modules/ChatRules.xml");
+                        nodeFound = true;
+                    }
+                    if (nodeFound)
+                        Function.SendServerMessage(msgType.Information, "已修改對話規則： " + regex  + " => " + respond);
+                    else
+                        Function.SendServerMessage(msgType.Error, "找不到對話規則： " + regex);
+                }
+            }
+            public void parse(string[] cmd)
+            {
+                switch(cmd[1])
+                {
+                    case "list":
+                        list();
+                        break;
+                    case "add":
+                        if (cmd.Length < 4)
+                        {
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @rules add <regex> <respond>");
+                            break;
+                        }
+                        else
+                        {
+                            add(cmd[2], cmd[3]);
+                            break;
+                        }
+                    case "delete":
+                        if (cmd.Length < 3)
+                        {
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @rules delete <regex>");
+                            break;
+                        }
+                        else
+                        {
+                            delete(cmd[2]);
+                            break;
+                        }
+
+                    case "modify":
+                        if (cmd.Length < 4)
+                        {
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @rules modify <regex> <new_respond>");
+                            break;
+                        }
+                        else
+                        {
+                            modify(cmd[2], cmd[3]);
+                            break;
+                        }
+                    default:
+                        Function.SendServerMessage(msgType.Error, "無效的參數，語法 @rules <add|delete|modify|list>");
+                        break;
+                }
+            }
         }
     }
 }

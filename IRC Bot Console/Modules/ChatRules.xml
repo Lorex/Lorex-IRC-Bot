@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rules>
+  <chat regex="XD" respond="什麼事情這麼好笑XD" />
+</rules>

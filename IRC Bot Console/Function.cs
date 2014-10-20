@@ -16,6 +16,7 @@ namespace IRC_Bot_Console
             {
                 //Function.SendServerMessage(msgType.Notify, "來自 " + Nick + " 的命令已解析。");
 
+                CmdModule.rules rules = new CmdModule.rules();
                 switch (cmd[0])
                 {
                     case "help":
@@ -74,6 +75,10 @@ namespace IRC_Bot_Console
                     case "shutup":
                         cmdClass.shutup();
                         break;
+                    case "rules":
+                        rules.parse(cmd);
+                        break;
+                    
                     default:
                         Function.SendServerMessage(msgType.Error, "命令無法解析");
                         break;

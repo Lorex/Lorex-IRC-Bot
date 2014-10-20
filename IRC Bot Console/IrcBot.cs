@@ -15,8 +15,7 @@ namespace IRC_Bot_Console
         public static StreamWriter writer;
         public static DateTime START_TIME = DateTime.Now; //count system uptime
         public static bool connection = true;
-
-        static void Main(string[] args)
+        static public void Main(string[] args)
         {
             NetworkStream stream;
             TcpClient irc;
