@@ -76,7 +76,14 @@ namespace IRC_Bot_Console
                         cmdClass.shutup();
                         break;
                     case "rules":
-                        rules.parse(cmd);
+                        if (cmd.Length < 2)
+                        {
+                            Function.SendServerMessage(msgType.Error, "無效的參數，語法 @rules <add|delete|modify|list>");
+                        }
+                        else
+                        {
+                            rules.parse(cmd);
+                        }
                         break;
                     
                     default:
