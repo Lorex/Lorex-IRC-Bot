@@ -85,7 +85,9 @@ namespace IRC_Bot_Console
                             rules.parse(cmd);
                         }
                         break;
-                    
+                    case "debug":
+                        cmdClass.debug();
+                        break;
                     default:
                         Function.SendServerMessage(msgType.Error, "命令無法解析");
                         break;

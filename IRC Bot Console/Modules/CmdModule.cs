@@ -210,5 +210,10 @@ namespace IRC_Bot_Console
                 }
             }
         }
+        public void debug()
+        {
+            config.debug = !config.debug;
+            Function.SendServerMessage(msgType.Information, "Debug 模式已切換");
+        }
     }
 }

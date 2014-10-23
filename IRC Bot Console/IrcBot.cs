@@ -15,6 +15,7 @@ namespace IRC_Bot_Console
         public static StreamWriter writer;
         public static DateTime START_TIME = DateTime.Now; //count system uptime
         public static bool connection = true;
+        
         static public void Main(string[] args)
         {
             NetworkStream stream;
@@ -46,6 +47,11 @@ namespace IRC_Bot_Console
                 {
                     while (connection && ((input = reader.ReadLine()) != null))
                     {
+                        if (config.debug)
+                        {
+                            Function.Log(consoleType.Message, input);
+                        }
+
                         string[] splitInput = input.Split(new Char[] { ' ' });
                         if (splitInput[0] == "PING")
                         {
