@@ -1,4 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <rules>
-  <chat regex="XD" respond="什麼事情這麼好笑XD" />
+  <chat regex="^XD" respond="什麼事情這麼好笑XD" />
+  <chat regex="^w$" respond="wwwwwwwwwwwwwwwwwwwwwwwwww" />
+  <chat regex="早安" respond="早/" />
+  <chat regex="^=\s=$" respond="= =幹嘛?" />
 </rules>

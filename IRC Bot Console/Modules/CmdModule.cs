@@ -80,12 +80,12 @@ namespace IRC_Bot_Console
             }
             else
             {
-                //Function.SendServerMessage(msgType.Information, "https://www.google.com.tw/#q=" + keyword);
-                Function.SendServerMessage(msgType.Information, "這麼簡單的事情直接叫 oktw 來做就好了，叫我幹嘛？ˊ_>ˋ");
-                IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :.g " + keyword);
-                IrcBot.writer.Flush();
-                Thread.Sleep(1000);
-                Function.SendServerMessage(msgType.Information, "恩，好乖 <(￣︶￣)> ");
+                Function.SendServerMessage(msgType.Information, "https://www.google.com.tw/#q=" + keyword);
+                //Function.SendServerMessage(msgType.Information, "這麼簡單的事情直接叫 oktw 來做就好了，叫我幹嘛？ˊ_>ˋ");
+                //IrcBot.writer.WriteLine("PRIVMSG " + config.CHANNEL + " :.g " + keyword);
+                //IrcBot.writer.Flush();
+                //Thread.Sleep(1000);
+                //Function.SendServerMessage(msgType.Information, "恩，好乖 <(￣︶￣)> ");
 
             }
         }
@@ -124,7 +124,7 @@ namespace IRC_Bot_Console
                 main.SetAttribute("respond", respond);
                 node.AppendChild(main);
                 xmlDoc.Save("Modules/ChatRules.xml");
-                Function.SendServerMessage(msgType.Information, "對話規則新增： " + regex + "=>" + respond);
+                Function.SendServerMessage(msgType.Information, "對話規則新增： " + regex + " => " + respond);
             }
             private void delete(string regex)
             {
