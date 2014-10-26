@@ -25,7 +25,12 @@ namespace IRC_Bot_Console
                     if (Regex.IsMatch(chat, node.Attributes["regex"].Value.ToString()))
                     {
                         Function.Log(consoleType.Message, "Chat Match: " + node.Attributes["regex"].Value.ToString() + " <=> " + node.Attributes["respond"].Value.ToString());
-                        Function.SendServerMessage(msgType.Information, node.Attributes["respond"].Value.ToString());
+
+                        string response = node.Attributes["respond"].Value.ToString();
+                        response = response.Replace("$SENDER", config.sender);
+                        response = response.Replace("$MSG", config.message);
+                        response = response.Replace("$SP", " ");
+                        Function.SendServerMessage(msgType.Information, response);
                     }
                 }
             }

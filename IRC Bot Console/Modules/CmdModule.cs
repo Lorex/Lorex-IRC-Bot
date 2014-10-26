@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Threading;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace IRC_Bot_Console
 {
@@ -108,17 +109,50 @@ namespace IRC_Bot_Console
                 node = xmlDoc.SelectSingleNode("rules");
             }
 
-            private void list()
+            private void list(string type)
             {
-                int i = 0;
+                switch(type)
+                {
+                    case "rules":
+                        int i = 0;
+                        foreach (XmlNode node in xmlNodeList)
+                        {
+                            Function.SendServerMessage(msgType.Information, "RULES[" + i + "]: " + node.Attributes["regex"].Value.ToString() + " => " +  node.Attributes["respond"].Value.ToString());
+                            i++;
+                        }
+                        break;
+                    case "const":
+                        Function.SendServerMessage(msgType.Information, "CONST [0]: $SENDER => Message Sender");
+                        Function.SendServerMessage(msgType.Information, "CONST [1]: $MSG => Message");
+                        Function.SendServerMessage(msgType.Information, "CONST [2]: $SP => Space(\" \")");
+                        break;
+                    default:
+                        Function.SendServerMessage(msgType.Error, "參數錯誤，語法 @rules list <rules|const>");
+                        break;
+                }
+                
+            }
+            private bool rulesVerify(string regex)
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load("Modules/Commands.xml");
+
+                XmlNodeList xmlNodeList = xmlDoc.SelectNodes("command/cmd");
                 foreach (XmlNode node in xmlNodeList)
                 {
-                    Function.SendServerMessage(msgType.Information, "RULES[" + i + "]: " + node.Attributes["regex"].Value.ToString() + " => " +  node.Attributes["respond"].Value.ToString());
-                    i++;
+                    if (Regex.IsMatch(regex, node.Attributes["line"].Value.ToString()))
+                        return false;
                 }
+                return false;
             }
             private void add(string regex, string respond)
             {
+
+                if (rulesVerify(regex) == false)
+                {
+                    Function.SendServerMessage(msgType.Error, "不被允許的判斷式");
+                    return;
+                }
                 XmlElement main = xmlDoc.CreateElement("chat");
                 main.SetAttribute("regex", regex);
                 main.SetAttribute("respond", respond);
@@ -157,18 +191,26 @@ namespace IRC_Bot_Console
                         xmlDoc.Save("Modules/ChatRules.xml");
                         nodeFound = true;
                     }
-                    if (nodeFound)
-                        Function.SendServerMessage(msgType.Information, "已修改對話規則： " + regex  + " => " + respond);
-                    else
-                        Function.SendServerMessage(msgType.Error, "找不到對話規則： " + regex);
                 }
+                if (nodeFound)
+                    Function.SendServerMessage(msgType.Information, "已修改對話規則： " + regex + " => " + respond);
+                else
+                    Function.SendServerMessage(msgType.Error, "找不到對話規則： " + regex);
             }
             public void parse(string[] cmd)
             {
                 switch(cmd[1])
                 {
                     case "list":
-                        list();
+                        if (cmd.Length < 3)
+                        {
+                            Function.SendServerMessage(msgType.Error, "參數不足，語法 @rules list <rules|const>");
+                            break;
+                        }
+                        else
+                        {
+                            list(cmd[2]);
+                        }
                         break;
                     case "add":
                         if (cmd.Length < 4)

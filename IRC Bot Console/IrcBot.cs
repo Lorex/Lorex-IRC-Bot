@@ -68,6 +68,8 @@ namespace IRC_Bot_Console
                                 string SayNick = splitHeader[0].TrimStart(':');
                                 string SayWord = splitInput[3].TrimStart(':');
                                 string SayTarget = splitInput[2];
+                                config.sender = SayNick;
+                                config.message = SayWord;
 
                                 for (int i = 4; i < splitInput.Length; i++)
                                     SayWord = SayWord + " " + splitInput[i]; 
